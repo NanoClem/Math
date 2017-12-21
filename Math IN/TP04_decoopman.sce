@@ -23,25 +23,17 @@ endfunction
 
 
 function X = getMatX(Pi)
-
-    p0 = Pi(1,:);
-    p1 = Pi(2,:);
-    p2 = Pi(3,:);
-    
-    X   = [ p0(1)**2, p0(1), 1;              // Matrice X
-            p1(1)**2, p1(1), 1;
-            p2(1)**2, p2(1), 1 ];
+    pX  = Pi(:,1);    
+    X   = [ pX(1)**2, pX(1), 1;              // Matrice X
+            pX(2)**2, pX(2), 1;
+            pX(3)**2, pX(3), 1 ];
 endfunction
 
 
 
 function Y = getMatY(Pi)
-    
-    p0 = Pi(1,:);
-    p1 = Pi(2,:);
-    p2 = Pi(3,:);
-    
-    Y = [ p0(1), p1(1), p2(1) ];
+    pY = Pi(:,2);
+    Y = pY';
 endfunction
 
 
@@ -73,16 +65,16 @@ coef = poly_interpol(Pts);
 function courbeInter = trace_interpol(C, Pi)
     XPi   = Pi(:,1);            //Absisse des points, attention renvoie un vecteur colonne
     YPi   = Pi(:,2);            //Ordonnée des points, attention renvoie un vecteur colonne
-    X     = getMatX();
-    Y     = getMatY();
+    X     = getMatX(Pi);
+    Y     = getMatY(Pi);
     Poly  = poly(C, "x", "c");  //Polynome de coef c (valeurs de C), avec la variable x
     xdata = [-2:.1:3];
     
-    plot(XPi, Ypi);             //tracé de la droite passant par ces 3 points
-    plot(X, Y, "+r", xdata, horner(Poly, xdata), "b");
+    plot(XPi', YPi');           //tracé de la droite passant par ces 3 points
+    plot(X, Y', "+r", xdata, horner(Poly, xdata), "b");
     
-    disp(Xpi);
-    disp(Ypi);
+    disp(XPi');
+    disp(YPi');
     disp(C, "les coefs du polynome");
     courbeInter = %t;
 endfunction
