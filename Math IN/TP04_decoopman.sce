@@ -24,7 +24,7 @@ endfunction
 
 function X = getMatX(Pi)
     pX  = Pi(:,1);    
-    X   = [ pX(1)**2, pX(1), 1;              // Matrice X
+    X   = [ pX(1)**2, pX(1), 1;              // Matrice X : l'adapter pour n'importe quel nombre de points
             pX(2)**2, pX(2), 1;
             pX(3)**2, pX(3), 1 ];
 endfunction
@@ -48,14 +48,14 @@ function interpol = poly_interpol(Pi)
           
     if( isReversible(X) == %f ) then         // On teste la matrice X pour savoir si elle est inversible
         interpol = %f;                       // si X n'est pas inversible, on arrête la fonction et on renvoie faux
+    else
+        revX = inv(X);                          // matrice 
+        Y    = getMatY(Pi)                      // matrice ou vecteur Y
+        
+        C    = Y * revX;                        // matrice des coefficients du polynome
+        
+        interpol = C;
     end
-    
-    revX = inv(X);                          // matrice 
-    Y    = getMatY(Pi)                      // matrice ou vecteur Y
-    
-    C    = Y * revX;                        // matrice des coefficients du polynome
-    
-    interpol = C;
 endfunction
 
 
@@ -68,12 +68,12 @@ function courbeInter = trace_interpol(C, Pi)
     X     = getMatX(Pi);
     Y     = getMatY(Pi);
     Poly  = poly(C, "x", "c");  //Polynome de coef c (valeurs de C), avec la variable x
-    xdata = [-2:.1:3];
+    xdata = [-1:.1:3];
     
-    plot(XPi', YPi');           //tracé de la droite passant par ces 3 points
-    plot(X, Y', "+r", xdata, horner(Poly, xdata), "b");
+    plot(XPi, YPi);           //tracé de la droite passant par ces 3 points
+    plot(X, Y, "+r", xdata, horner(Poly, xdata), "b");
     
-    disp(XPi');
+    disp(XPi);
     disp(YPi');
     disp(C, "les coefs du polynome");
     courbeInter = %t;
