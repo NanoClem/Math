@@ -1,6 +1,9 @@
 // TP04 DECOOPMAN
 
 
+//EXRCICE 1 : APPROCHE NAÏVE
+
+
 P0   = [1, 3];
 P1   = [-1, 3];
 P2   = [2, -1];
@@ -78,6 +81,86 @@ function courbeInter = trace_interpol(C, Pi)
     disp(C, "les coefs du polynome");
     courbeInter = %t;
 endfunction
+
+
+
+
+
+//EXERCICE 2 : polynomes de Lagrange
+
+matX  = getMatX(Pts);
+rangX = rank(matX);
+
+
+//Interpolation par la méthode de Newton-Lagrange
+//On obtient un polynome de Lagrange
+function [L] = lagrangePoly(X, rang)
+    x = poly(0, "x");   //création d'un polynome vide
+    nb = length(X);     //nombre de points de données
+    
+    L = 1               //au départ le polynome ré&sultat est de degré 0
+    
+    for i = 1:nb        //calcul d'un polynome de Lagrange pour le point de données X[rang]
+        if(i <> rang) then
+            A = ( x-X(i) ) / ( X(rang) - X(i) );
+            L = L * A;
+        end
+    end
+endfunction
+
+
+
+//Fonction pour tracer les points de données et le polynome de Lagrange résultant
+//paramètres : matrice X, rand de la matrice, points de données
+function courbeLagrange = trace_Lagrange(X, rang, Pi)
+    if(isReversible(X) == %f) then
+        courbeLagrange = %f;
+    else
+        XPi   = Pi(:,1);            //Absisse des points, attention renvoie un vecteur colonne
+        YPi   = Pi(:,2);            //Ordonnée des points, attention renvoie un vecteur colonne
+        Poly = lagrangePoly(X, rang);
+        xdata = [-1:.1:3];
+        
+        Y = getMatY(Pi);
+        for i = 1:length(X)
+            Y = Y + (Y * Poly);
+        end
+        
+        plot(XPi, YPi);            //tracé de la droite passant par les points de données
+        plot(X, Y, "+r", xdata, horner(Poly, xdata), "b");
+        
+        courbeLagrange = %t;
+    end
+endfunction
+
+
+
+
+
+
+//EXERCICE 3 : EN UTILISANT LES COURBES PARAMETRIQUES
+
+
+
+//Fonction traçant l'interpolation spline
+//avec un fichier csv contenant les données
+
+file_data= "data.csv"
+
+function courbeSpline = trace_spline(file_name)
+    filename = fullfile("/tmp", file_name);
+    M = csvRead(filename, ' ', ',', 'double');
+    
+    X = M(:, 1);
+    Y = M(:, 2);
+    
+    spline = smooth([X';Y'], 0.1);
+    plot(X, Y, "+r", spline(1 ,:)', spline(2,:)', "-b");
+endfunction
+
+
+
+
 
 
 
