@@ -114,7 +114,7 @@ endfunction
 //paramètres : matrice X, rand de la matrice, points de données
 function courbeLagrange = trace_Lagrange(X, rang, Pi)
     if(isReversible(X) == %f) then
-        courbeLagrange = %f;
+        ;
     else
         XPi   = Pi(:,1);            //Absisse des points, attention renvoie un vecteur colonne
         YPi   = Pi(:,2);            //Ordonnée des points, attention renvoie un vecteur colonne
